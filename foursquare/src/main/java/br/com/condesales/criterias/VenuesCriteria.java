@@ -19,7 +19,7 @@ public class VenuesCriteria {
 		}
 	}
 
-	private String mQuery = "";
+	private String mQuery = "upc";
 	private int mRadius = 1000;
 	private int mQuantity = 50;
 	private Location mLocation = new Location(LocationManager.GPS_PROVIDER);
@@ -50,6 +50,7 @@ public class VenuesCriteria {
 	}
 
 	public Location getLocation() {
+		mLocation = new Location(LocationManager.GPS_PROVIDER);
 		return mLocation;
 	}
 

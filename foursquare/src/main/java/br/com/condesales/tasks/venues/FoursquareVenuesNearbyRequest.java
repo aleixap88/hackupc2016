@@ -3,8 +3,10 @@ package br.com.condesales.tasks.venues;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -22,9 +24,11 @@ import java.util.ArrayList;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 
+import br.com.condesales.GPSTracker;
 import br.com.condesales.constants.FoursquareConstants;
 import br.com.condesales.criterias.VenuesCriteria;
 import br.com.condesales.listeners.FoursquareVenuesRequestListener;
+import br.com.condesales.models.Location;
 import br.com.condesales.models.Venue;
 
 public class FoursquareVenuesNearbyRequest extends
@@ -35,17 +39,20 @@ public class FoursquareVenuesNearbyRequest extends
     private FoursquareVenuesRequestListener mListener;
     private VenuesCriteria mCriteria;
     private boolean sslExp;
+    private android.location.Location mLocation;
 
     public FoursquareVenuesNearbyRequest(Activity activity,
                                          FoursquareVenuesRequestListener listener, VenuesCriteria criteria) {
         mActivity = activity;
         mListener = listener;
         mCriteria = criteria;
+
     }
 
     public FoursquareVenuesNearbyRequest(Activity activity, VenuesCriteria criteria) {
         mActivity = activity;
         mCriteria = criteria;
+
     }
 
     @Override
@@ -54,6 +61,10 @@ public class FoursquareVenuesNearbyRequest extends
         mProgress.setCancelable(false);
         mProgress.setMessage("Getting venues nearby ...");
         mProgress.show();
+        GPSTracker gps = new GPSTracker(mActivity);
+        if(gps.canGetLocation()){
+            mLocation = gps.getLocation();
+        }
         super.onPreExecute();
     }
 
@@ -62,6 +73,8 @@ public class FoursquareVenuesNearbyRequest extends
 
         String access_token = params[0];
         ArrayList<Venue> venues = new ArrayList<Venue>();
+
+
 
         try {
 
@@ -72,24 +85,26 @@ public class FoursquareVenuesNearbyRequest extends
                     + "?v="
                     + apiDateVersion
                     + "&ll="
-                    + mCriteria.getLocation().getLatitude()
+                    + mLocation.getLatitude()
                     + ","
-                    + mCriteria.getLocation().getLongitude()
-                    + "&llAcc="
-                    + mCriteria.getLocation().getAccuracy()
-                    + "&query="
-                    + mCriteria.getQuery()
-                    + "&limit="
-                    + mCriteria.getQuantity()
-                    + "&intent="
-                    + mCriteria.getIntent().getValue()
-                    + "&radius="
-                    + mCriteria.getRadius();
+                    + mLocation.getLongitude()
+                    //+ "&llAcc="
+                    //+ mCriteria.getLocation().getAccuracy()
+                    + "&query=barcelona";
+                    //+ mCriteria.getQuery()
+                    //+ "&limit="
+                    //+ mCriteria.getQuantity()
+                    //+ "&intent="
+                    //+ mCriteria.getIntent().getValue()
+                    //+ "&radius="
+                    //+ mCriteria.getRadius();
             if (!access_token.equals("")) {
                 uri = uri + "&oauth_token=" + access_token;
             } else {
                 uri = uri + "&client_id=" + FoursquareConstants.CLIENT_ID + "&client_secret=" + FoursquareConstants.CLIENT_SECRET;
             }
+
+            Log.v("HI",uri);
 
             JSONObject venuesJson = executeHttpGet(uri);
 

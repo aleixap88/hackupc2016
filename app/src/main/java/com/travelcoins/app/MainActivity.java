@@ -1,5 +1,6 @@
 package com.travelcoins.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
 import android.support.v7.app.AppCompatActivity;
@@ -25,51 +26,37 @@ import br.com.condesales.models.User;
 import br.com.condesales.models.Venue;
 import br.com.condesales.tasks.users.UserImageRequest;
 
-public class MainActivity extends AppCompatActivity implements
-        AccessTokenRequestListener {
+public class MainActivity extends AppCompatActivity {
 
     private EasyFoursquareAsync async;
-    private String msg = "HELLO";
     private EasyFoursquare sync;
     private ArrayList<Venue> VenuesList;
     private VenuesCriteria criteria;
-    private Context context = getApplicationContext();
+    private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = getApplicationContext();
         async = new EasyFoursquareAsync(this);
-        async.requestAccess(this);
+        //async.requestAccess(this);
 
-    }
-
-    @Override
-    public void onError(String errorMsg) {
-        // Do something with the error message
-        Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onAccessGrant(String accessToken) {
-        // with the access token you can perform any request to foursquare.
-        // example:
-        //for another examples uncomment lines below:
         async.getVenuesNearby(new FoursquareVenuesRequestListener() {
+            @Override
+            public void onVenuesFetched(ArrayList<Venue> venues) {
+                Venue v = venues.get(1);
+                String s = v.getId();
+                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+            }
+
             @Override
             public void onError(String errorMsg) {
 
             }
-
-            @Override
-            public void onVenuesFetched(ArrayList<Venue> venues) {
-
-                VenuesList = venues;
-                Toast.makeText(context, "HI", Toast.LENGTH_SHORT).show();
-            }
         },criteria);
-
 
     }
 
