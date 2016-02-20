@@ -80,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Map configuration
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.5f));
         mMap.setMyLocationEnabled(true);
-       
+
 
         async.getVenuesNearby(new FoursquareVenuesRequestListener() {
             @Override
@@ -93,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(v.getLocation().getLat(), v.getLocation().getLng()))
-                            .title(v.getName())
+                            .title(v.getName()+" "+v.getCategories().get(0).getName())
                             .icon(BitmapDescriptorFactory.fromBitmap(resize_MapIcon(v.getCategories().get(0).getId()))));
 
                 }
