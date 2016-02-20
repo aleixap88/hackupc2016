@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\howar\Documents\GitHub\hackupc2016\app\libs\gson-2.4.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="0695b63d702f505b9b916e02272e3b6381bade7f">
+        <dex dex="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\pre-dexed\debug\gson-2.4_69c67f45ff76a6d360ddf85b7da4ceca5be7c95c.jar" />
+    </item>
+
+</items>
