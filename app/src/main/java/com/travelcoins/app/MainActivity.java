@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         TinyDB tinydb = new TinyDB(getApplicationContext());
 
-        BdHandler bdHandler= new BdHandler();
-        bdHandler.execute();
+        //BdHandler bdHandler= new BdHandler();
+        //bdHandler.execute();
 
 
         // -------------------------------------------
