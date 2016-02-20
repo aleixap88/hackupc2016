@@ -1,8 +1,13 @@
 package com.travelcoins.app;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import android.location.Location;
 
@@ -10,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -17,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import br.com.condesales.EasyFoursquareAsync;
+import br.com.condesales.GPSTracker;
 import br.com.condesales.criterias.VenuesCriteria;
 import br.com.condesales.listeners.FoursquareVenuesRequestListener;
 
@@ -24,12 +31,15 @@ import br.com.condesales.models.Venue;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private Context mActivity;
     private GoogleMap mMap;
     private EasyFoursquareAsync async;
     private ArrayList<Venue> VenuesList;
     private VenuesCriteria criteria;
     private Context context;
     private Location mLocation;
+
+    private LatLng mLatLng;
     private Venue v;
 
     @Override
@@ -40,6 +50,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mActivity = getApplicationContext();
+
+        GPSTracker gps = new GPSTracker(mActivity);
+        if(gps.canGetLocation()){
+            mLocation = gps.getLocation();
+            mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+        }
     }
 
 
@@ -58,7 +76,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         context = getApplicationContext();
         async = new EasyFoursquareAsync(this);
-        //async.requestAccess(this);
+
+        //Map configuration
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.5f));
+        mMap.setMyLocationEnabled(true);
+       
 
         async.getVenuesNearby(new FoursquareVenuesRequestListener() {
             @Override
@@ -68,9 +90,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < venues.size(); ++i) {
                     v = venues.get(i);
+
                     mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(v.getLocation().getLat(),v.getLocation().getLng()))
-                            .title(v.getName()));
+                            .position(new LatLng(v.getLocation().getLat(), v.getLocation().getLng()))
+                            .title(v.getName())
+                            .icon(BitmapDescriptorFactory.fromBitmap(resize_MapIcon(v.getCategories().get(0).getId()))));
+
                 }
             }
 
@@ -85,5 +110,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         /*LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
+    }
+
+
+
+    public Bitmap resize_MapIcon(String category) {
+        String iconName;
+        switch (category) {
+            case "4bf58dd8d48988d12d941735":
+                iconName = "monument_coin";
+                break;
+            case "4bf58dd8d48988d181941735":
+                iconName = "museum_coin";
+                break;
+            case "4bf58dd8d48988d1fe931735":
+                iconName = "transport_coin";
+                break;
+            case "4bf58dd8d48988d1fd931735":
+                iconName = "transport_coin";
+                break;
+            case "4d4b7105d754a06372d81259":
+                iconName = "educational_coin";
+                break;
+            default:
+                iconName = "hackupc_coin";
+        }
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 70, 70, false);
+        return resizedBitmap;
     }
 }
