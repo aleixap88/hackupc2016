@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
+import android.location.Location;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,11 +13,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 import java.util.ArrayList;
 
 import br.com.condesales.EasyFoursquareAsync;
 import br.com.condesales.criterias.VenuesCriteria;
 import br.com.condesales.listeners.FoursquareVenuesRequestListener;
+
 import br.com.condesales.models.Venue;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -26,6 +29,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<Venue> VenuesList;
     private VenuesCriteria criteria;
     private Context context;
+    private Location mLocation;
+    private Venue v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Venue v = venues.get(1);
                 String s = v.getId();
                 Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < venues.size(); ++i) {
+                    v = venues.get(i);
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(v.getLocation().getLat(),v.getLocation().getLng()))
+                            .title(v.getName()));
+                }
             }
 
             @Override
