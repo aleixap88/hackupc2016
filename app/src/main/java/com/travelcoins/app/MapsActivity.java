@@ -1,15 +1,12 @@
 package com.travelcoins.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.LocationManager;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,14 +16,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
 import java.util.ArrayList;
 
 import br.com.condesales.EasyFoursquareAsync;
 import br.com.condesales.GPSTracker;
 import br.com.condesales.criterias.VenuesCriteria;
 import br.com.condesales.listeners.FoursquareVenuesRequestListener;
-
 import br.com.condesales.models.Venue;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
