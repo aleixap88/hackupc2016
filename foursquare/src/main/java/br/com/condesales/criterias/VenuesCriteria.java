@@ -3,6 +3,8 @@ package br.com.condesales.criterias;
 import android.location.Location;
 import android.location.LocationManager;
 
+import br.com.condesales.constants.FoursquareConstants;
+
 public class VenuesCriteria {
 
 	public enum VenuesCriteriaIntent {
@@ -17,6 +19,7 @@ public class VenuesCriteria {
 		public String getValue() {
 			return value;
 		}
+
 	}
 
 	private String mQuery = "upc";

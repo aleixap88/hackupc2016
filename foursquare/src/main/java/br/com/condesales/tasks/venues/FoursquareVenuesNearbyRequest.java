@@ -88,16 +88,22 @@ public class FoursquareVenuesNearbyRequest extends
                     + mLocation.getLatitude()
                     + ","
                     + mLocation.getLongitude()
-                    //+ "&llAcc="
-                    //+ mCriteria.getLocation().getAccuracy()
-                    + "&query=barcelona";
+                    + "&llAcc="
+                    + mLocation.getAccuracy()
+                    + "&query=barcelona"
                     //+ mCriteria.getQuery()
                     //+ "&limit="
                     //+ mCriteria.getQuantity()
                     //+ "&intent="
                     //+ mCriteria.getIntent().getValue()
-                    //+ "&radius="
-                    //+ mCriteria.getRadius();
+                    + "&radius="
+                    + FoursquareConstants.RADIUS
+                    + "&categoryId="
+                    + FoursquareConstants.MONUMENTS + ","
+                    + FoursquareConstants.MUSEUM + ","
+                    + FoursquareConstants.BUS + ","
+                    + FoursquareConstants.UNIS + ","
+                    + FoursquareConstants.TRAIN;
             if (!access_token.equals("")) {
                 uri = uri + "&oauth_token=" + access_token;
             } else {
