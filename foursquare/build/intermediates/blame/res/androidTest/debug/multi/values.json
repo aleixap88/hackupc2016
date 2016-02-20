@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Users\\howar\\Documents\\GitHub\\hackupc2016\\foursquare\\build\\intermediates\\res\\merged\\androidTest\\debug\\values\\values.xml",
+        "outputFile": "/home/august/Desktop/hackupc2016/foursquare/build/intermediates/res/merged/androidTest/debug/values/values.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 101
                 },
                 "from": {
-                    "file": "C:\\Users\\howar\\Documents\\GitHub\\hackupc2016\\foursquare\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "/home/august/Desktop/hackupc2016/foursquare/build/intermediates/bundles/debug/res/values/values.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 171
                 },
                 "from": {
-                    "file": "C:\\Users\\howar\\Documents\\GitHub\\hackupc2016\\foursquare\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "/home/august/Desktop/hackupc2016/foursquare/build/intermediates/bundles/debug/res/values/values.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
