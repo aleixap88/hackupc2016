@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openmap(View view) {
-        Intent i = new Intent(this, MapsActivity.class);
+        Intent i = new Intent(this, NavDrawMap.class);
         startActivity(i);
     }
 
