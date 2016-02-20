@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -30,29 +31,38 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String PREFERENCES = "main_preferenc";
-    private static final String ID_USER = "id_user";
-    private static final String TOKEN_USER = "token_user";
-
-    private static final String LOGEADO = "logeado";
+    private static final String IDS = "ids";
 
     private CallbackManager callbackManager;
     private TextView info;
     private LoginButton loginButton;
 
+    private TinyDB tinydb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Saber si se ha hecho login previamente
-        final SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, 0);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        TinyDB tinydb = new TinyDB(getApplicationContext());
 
-        boolean login_previo = sharedPreferences.getBoolean(LOGEADO, false);
+        BdHandler bdHandler= new BdHandler();
+        bdHandler.execute();
 
 
         // -------------------------------------------
@@ -60,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -134,6 +143,127 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return "SHA-1 generation: epic failed";
+    }
+
+
+    public class BdHandler  extends AsyncTask< List<String>, Void, List<String> > {
+
+        private final String LOG_TAG = BdHandler.class.getSimpleName();
+
+        public List<String> getDataFromJson(String importJsonStr)
+                throws JSONException {
+
+            // Estas serán las constantes que queremos coger del json que nos da nuestra API:
+            final String API_ID_FB = "id_facebook";
+            final String API_MONEDAS_RETADAS = "monedas_retadas";
+
+            JSONArray jsonArray = new JSONArray(importJsonStr);
+
+            List<String> result = new ArrayList<String>();
+            int i;
+            for (i = 0; i < jsonArray.length(); ++i) {
+
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String identificador = jsonObject.getString(API_ID_FB);
+
+                result.add(identificador);
+            }
+
+            return result;
+
+        }
+
+
+        @Override
+        protected List<String> doInBackground(List<String>... params) {
+
+
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Will contain the raw JSON response as a string.
+            String importJsonStr = null;
+
+            try {
+                // Construct the URL for the OpenWeatherMap query
+                // Possible parameters are avaiable at OWM's forecast API page, at
+                // http://openweathermap.org/API#forecast
+                String BASE_URL = "https://travelcoins.herokuapp.com/api/users";
+
+                URL url = new URL(BASE_URL);
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                importJsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                // If the code didn't successfully get the weather data, there's no point in attemping
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                //Log.v(LOG_TAG, "El JSON es: " + importJsonStr);
+                return getDataFromJson(importJsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<String> result) {
+            ArrayList<String> lista = new ArrayList<String>();
+            if (result != null) {
+                int i = 0;
+                while(i < result.size()) {
+                    lista.add(result.get(i));
+                    ++i;
+                }
+                // Llegados a este punto ya tenemos todos los datos actualizados.
+            }
+            tinydb.putListString(IDS, lista);
+        }
+
     }
 
 }
