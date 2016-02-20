@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/all_cat"
+            android:icon="@mipmap/ic_launcher"
+            android:title="All categories" />
+        <item
+            android:id="@+id/monument_coins"
+            android:icon="@drawable/monument_coin"
+            android:title="Monuments" />
+        <item
+            android:id="@+id/educational_coins"
+            android:icon="@drawable/educational_coin"
+            android:title="Educational" />
+        <item
+            android:id="@+id/museum_coins"
+            android:icon="@drawable/museum_coin"
+            android:title="Museums" />
+        <item
+            android:id="@+id/transport_coins"
+            android:icon="@drawable/transport_coin"
+            android:title="Transports" />
+        <item
+            android:id="@+id/custom_coins"
+            android:icon="@drawable/hackupc_coin"
+            android:title="Custom coins!" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>
