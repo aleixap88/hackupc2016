@@ -1,19 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" >
-
-    <item
-        jar="/home/august/Desktop/hackupc2016/app/build/intermediates/exploded-aar/hackupc2016/foursquare/unspecified/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.0"
-        sha1="e72325bc6f57e9c7b34fc00968f23e86d8664532">
-        <dex dex="/home/august/Desktop/hackupc2016/app/build/intermediates/pre-dexed/debug/hackupc2016-foursquare-unspecified_6fe6d7b4f2a7c2a6a595aed57ab7c7cd2481e478.jar" />
-    </item>
-    <item
-        jar="/home/august/Desktop/hackupc2016/app/build/intermediates/exploded-aar/hackupc2016/foursquare/unspecified/jars/libs/foursquare-api-1.0.2.jar"
-        jumboMode="false"
-        revision="22.0.0"
-        sha1="61a89e248bc1bfda694804dc8029c2e71c3f6b74">
-        <dex dex="/home/august/Desktop/hackupc2016/app/build/intermediates/pre-dexed/debug/foursquare-api-1.0.2_09456645308419b79cea7a8e8833bd5869bdc230.jar" />
-    </item>
-
-</items>
+<items version="2" />
