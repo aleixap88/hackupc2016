@@ -2,9 +2,7 @@ package com.travelcoins.app;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.AsyncTask;
@@ -14,20 +12,13 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -59,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        TinyDB tinydb = new TinyDB(getApplicationContext());
 
-        //BdHandler bdHandler= new BdHandler();
-        //bdHandler.execute();
+
+        BdHandler bdHandler = new BdHandler();
+        bdHandler.execute();
 
 
         // -------------------------------------------
@@ -89,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
                 AccessToken accessToken = loginResult.getAccessToken();
 
+                if (!usuario_registrado()) {
+
+                }
+
                 Intent i = new Intent(getApplicationContext(), MapsActivity.class);
                 startActivity(i);
 
@@ -114,6 +109,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+    private boolean usuario_registrado() {
+        TinyDB tinydb = new TinyDB(getApplicationContext());
+        ArrayList<String> lista = tinydb.getListString(IDS);
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i) == AccessToken.getCurrentAccessToken().getUserId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void openmap(View view) {
         Intent i = new Intent(this, NavDrawMap.class);
         startActivity(i);
@@ -124,8 +133,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
-
 
     public static String printHashKey(Context ctx) {
         // Add code to print out the key hash
@@ -144,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
 
         return "SHA-1 generation: epic failed";
     }
-
 
     public class BdHandler  extends AsyncTask< List<String>, Void, List<String> > {
 
@@ -221,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 importJsonStr = buffer.toString();
             } catch (IOException e) {
-                Log.e(LOG_TAG, "Error ", e);
+                //Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
                 // to parse it.
                 return null;
@@ -239,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             try {
-                //Log.v(LOG_TAG, "El JSON es: " + importJsonStr);
+                Log.v(LOG_TAG, "El JSON es: " + importJsonStr);
                 return getDataFromJson(importJsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
@@ -261,7 +267,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 // Llegados a este punto ya tenemos todos los datos actualizados.
             }
-            tinydb.putListString(IDS, lista);
+            if (lista != null) {
+                TinyDB tinydb = new TinyDB(getApplicationContext());
+                tinydb.putListString(IDS, lista);
+            }
         }
 
     }
