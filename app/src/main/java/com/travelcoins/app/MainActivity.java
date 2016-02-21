@@ -27,10 +27,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -81,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
                 AccessToken accessToken = loginResult.getAccessToken();
 
                 if (!usuario_registrado()) {
-
+                    Log.d("REGISTRO: ", "user registrado!!");
+                    Post_handler post_handler = new Post_handler();
+                    post_handler.execute();
                 }
 
                 Intent i = new Intent(getApplicationContext(), MapsActivity.class);
@@ -150,6 +154,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return "SHA-1 generation: epic failed";
+    }
+
+    public class Post_handler extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            URL url = null;
+            try {
+                url = new URL("https://travelcoins.herokuapp.com/api/users");
+                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setDoInput(true);
+                connection.setRequestProperty("id_facebook", AccessToken.getCurrentAccessToken().getUserId());
+                connection.setUseCaches(false);
+                connection.setDoOutput(true);
+
+                DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+                wr.writeBytes("https://travelcoins.herokuapp.com/api/users");
+                wr.flush();
+                wr.close();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }
     }
 
     public class BdHandler  extends AsyncTask< List<String>, Void, List<String> > {
