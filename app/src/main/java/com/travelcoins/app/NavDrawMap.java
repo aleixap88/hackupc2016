@@ -2,6 +2,9 @@ package com.travelcoins.app;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -76,9 +79,15 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
         int id = item.getItemId();
 
         if (id == R.id.all_cat) {
+
             fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
         } else if (id == R.id.monument_coins) {
             fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
+
+            //fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
+        } else if (id == R.id.monument_coins) {
+            //fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
+
         } else if (id == R.id.educational_coins) {
 
         } else if (id == R.id.museum_coins) {
@@ -86,6 +95,23 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
         } else if (id == R.id.transport_coins) {
 
         } else if (id == R.id.custom_coins) {
+
+
+        } else if (id == R.id.nav_share) {
+            try
+            { Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "TravelCoins");
+                String sAux = "\nLet me recommend you this application\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "choose one"));
+            }
+            catch(Exception e)
+            { //e.toString();
+            }
+        } else if (id == R.id.nav_send) {
+
 
         }
 

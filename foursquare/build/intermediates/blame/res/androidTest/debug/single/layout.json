@@ -1,5 +1,9 @@
 [
     {
+        "merged": "C:\\Users\\Gladius\\Documents\\test\\hackupc2016\\foursquare\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\dialog_layout.xml",
+        "source": "C:\\Users\\Gladius\\Documents\\test\\hackupc2016\\foursquare\\build\\intermediates\\bundles\\debug\\res\\layout\\dialog_layout.xml"
+    },
+    {
         "merged": "C:\\Users\\howar\\Documents\\GitHub\\hackupc2016\\foursquare\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\dialog_layout.xml",
         "source": "C:\\Users\\howar\\Documents\\GitHub\\hackupc2016\\foursquare\\build\\intermediates\\bundles\\debug\\res\\layout\\dialog_layout.xml"
     }

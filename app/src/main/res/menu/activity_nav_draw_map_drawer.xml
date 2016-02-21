@@ -4,6 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/all_cat"
+
             android:icon="@drawable/ic_menu_camera"
             android:title="All categories" />
         <item
@@ -25,6 +26,28 @@
         <item
             android:id="@+id/custom_coins"
             android:icon="@drawable/ic_menu_manage"
+
+            android:title="All categories" />
+        <item
+            android:id="@+id/monument_coins"
+            android:icon="@drawable/monument_coin"
+            android:title="Monuments" />
+        <item
+            android:id="@+id/educational_coins"
+            android:icon="@drawable/educational_coin"
+            android:title="Educational" />
+        <item
+            android:id="@+id/museum_coins"
+            android:icon="@drawable/museum_coin"
+            android:title="Museums" />
+        <item
+            android:id="@+id/transport_coins"
+            android:icon="@drawable/transport_coin"
+            android:title="Transports" />
+        <item
+            android:id="@+id/custom_coins"
+            android:icon="@drawable/hackupc_coin"
+
             android:title="Custom coins!" />
     </group>
 

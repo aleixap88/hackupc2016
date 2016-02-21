@@ -47,16 +47,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView info;
     private LoginButton loginButton;
 
-    private TinyDB tinydb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
         BdHandler bdHandler = new BdHandler();
         bdHandler.execute();
-
 
         // -------------------------------------------
 
