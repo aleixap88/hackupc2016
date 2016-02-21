@@ -14,12 +14,14 @@
 
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <TextView
+        android:id="@+id/cuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon" />
+        android:text=""
+        android:textSize="55dp"
+        android:textColor="#FF0000"/>
 
 
     android:alpha=".8"
@@ -31,7 +33,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
 
-        android:text="TravelCoins"
+        android:text=""
 
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -40,8 +42,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:text="android.studio@android.com" />
-
-        android:text="Become a truly coin hunter!" />
+        android:text="" />
 
 </LinearLayout>

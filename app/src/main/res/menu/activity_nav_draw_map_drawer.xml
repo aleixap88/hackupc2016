@@ -3,52 +3,49 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/all_cat"
-
-            android:icon="@drawable/ic_menu_camera"
-            android:title="All categories" />
-        <item
-            android:id="@+id/monument_coins"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Monuments" />
-        <item
-            android:id="@+id/educational_coins"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Educational" />
-        <item
-            android:id="@+id/museum_coins"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Museums" />
-        <item
-            android:id="@+id/transport_coins"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Transports" />
-        <item
-            android:id="@+id/custom_coins"
-            android:icon="@drawable/ic_menu_manage"
+            android:id="@+id/all_coins"
+            android:icon="@drawable/monument_coin"
 
             android:title="All categories" />
+        <item
+            android:id="@+id/count_all"
+            android:title="" />
         <item
             android:id="@+id/monument_coins"
             android:icon="@drawable/monument_coin"
             android:title="Monuments" />
         <item
+            android:id="@+id/count_monuments"
+            android:title="" />
+        <item
             android:id="@+id/educational_coins"
             android:icon="@drawable/educational_coin"
             android:title="Educational" />
+        <item
+            android:id="@+id/count_educational"
+            android:title="" />
         <item
             android:id="@+id/museum_coins"
             android:icon="@drawable/museum_coin"
             android:title="Museums" />
         <item
+            android:id="@+id/count_museums"
+            android:title="" />
+        <item
             android:id="@+id/transport_coins"
             android:icon="@drawable/transport_coin"
             android:title="Transports" />
+        <item
+            android:id="@+id/count_transports"
+            android:title="" />
         <item
             android:id="@+id/custom_coins"
             android:icon="@drawable/hackupc_coin"
 
             android:title="Custom coins!" />
+        <item
+            android:id="@+id/count_customs"
+            android:title="" />
     </group>
 
     <item android:title="Communicate">
@@ -57,10 +54,7 @@
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+
         </menu>
     </item>
 

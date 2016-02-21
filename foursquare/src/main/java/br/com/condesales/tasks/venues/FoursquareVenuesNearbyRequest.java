@@ -92,7 +92,7 @@ public class FoursquareVenuesNearbyRequest extends
                     + mLocation.getAccuracy()
                     + "&query=barcelona"
                     //+ mCriteria.getQuery()
-                    //+ "&limit="
+                    //+ "&limit=50"
                     //+ mCriteria.getQuantity()
                     //+ "&intent="
                     //+ mCriteria.getIntent().getValue()

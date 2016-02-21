@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                 AccessToken accessToken = loginResult.getAccessToken();
 
+
                 if (!usuario_registrado()) {
                     Log.d("REGISTRO: ", "user registrado!!");
                     Post_handler post_handler = new Post_handler();

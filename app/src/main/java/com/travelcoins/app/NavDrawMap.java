@@ -25,8 +25,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -80,6 +82,9 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_draw_map);
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -89,12 +94,32 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+        tinydb = new TinyDB(getApplicationContext());
+
+        tinydb.putInt(COINS_TOTAL, 0);
+        tinydb.putInt(COINS_MUSEUM, 0);
+        tinydb.putInt(COINS_UNI, 0);
+        tinydb.putInt(COINS_METRO, 0);
+        tinydb.putInt(COINS_BUS, 0);
+        tinydb.putInt(COINS_MONUMENT, 0);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.count_all).setTitle(Integer.toString(tinydb.getInt(COINS_TOTAL)));
+        navigationView.getMenu().findItem(R.id.count_educational).setTitle(Integer.toString(tinydb.getInt(COINS_UNI)));
+        navigationView.getMenu().findItem(R.id.count_customs).setTitle(Integer.toString(tinydb.getInt(COINS_METRO)));
+        navigationView.getMenu().findItem(R.id.count_museums).setTitle(Integer.toString(tinydb.getInt(COINS_MUSEUM)));
+        navigationView.getMenu().findItem(R.id.count_monuments).setTitle(Integer.toString(tinydb.getInt(COINS_MONUMENT)));
+        navigationView.getMenu().findItem(R.id.count_transports).setTitle(Integer.toString(tinydb.getInt(COINS_BUS)));
 
 
 
         // ---------------------------------------
+
+
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -104,7 +129,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
         //saved = tinydb.getListString("saved_coins");
 
-        tinydb = new TinyDB(getApplicationContext());
+
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -135,6 +160,8 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.nav_draw_map, menu);
+
+
         return true;
     }
 
@@ -143,12 +170,6 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -159,26 +180,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
         FragmentManager fm = getFragmentManager();
         int id = item.getItemId();
 
-        if (id == R.id.all_cat) {
-
-            fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
-        } else if (id == R.id.monument_coins) {
-            fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
-
-            //fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
-        } else if (id == R.id.monument_coins) {
-            //fm.beginTransaction().replace(R.id.drawer_layout, new GmapFragment()).commit();
-
-        } else if (id == R.id.educational_coins) {
-
-        } else if (id == R.id.museum_coins) {
-
-        } else if (id == R.id.transport_coins) {
-
-        } else if (id == R.id.custom_coins) {
-
-
-        } else if (id == R.id.nav_share) {
+        if (id == R.id.nav_share) {
             try
             { Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
@@ -191,9 +193,6 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
             catch(Exception e)
             { //e.toString();
             }
-        } else if (id == R.id.nav_send) {
-
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -268,6 +267,8 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
                                     plusone(v.getCategories().get(0).getId());
 
+
+
                                     Log.v("WOLOLO", "YOU DONT HAVE IT");
                                 }
                             }
@@ -302,6 +303,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
     public Bitmap resize_MapIcon(String category) {
         String iconName;
+        //Log.d("CATEGORYYYYYYYYYYYYYYYYYY : ", category);
         switch (category) {
             case "4bf58dd8d48988d12d941735":
                 iconName = "monument_coin";
@@ -315,11 +317,20 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
             case "4bf58dd8d48988d1fd931735":
                 iconName = "transport_coin";
                 break;
+            case "4bf58dd8d48988d129951735":
+                iconName = "transport_coin";
+                break;
+            case "52f2ab2ebcbc57f1066b8b50":
+                iconName = "transport_coin";
+                break;
+            case "52f2ab2ebcbc57f1066b8b4f":
+                iconName = "transport_coin";
+                break;
             case "4d4b7105d754a06372d81259":
                 iconName = "educational_coin";
                 break;
             default:
-                iconName = "hackupc_coin";
+                iconName = "default_coin";
         }
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(iconName, "drawable", getPackageName()));
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 70, 70, false);
@@ -333,7 +344,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
                 + "New Longitude: " + location.getLongitude();
 
         mLocation = location;
-        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
         mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
         ArrayList<String> saved = tinydb.getListString("saved_coins");
 
@@ -394,7 +405,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
         Circle circle = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(location.getLatitude(), location.getLongitude()))
-                .radius(20)
+                .radius(25)
                 .strokeColor(android.graphics.Color.TRANSPARENT));
 
         Location.distanceBetween(latlng.latitude, latlng.longitude,
@@ -413,6 +424,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
     public void plusone(String id) {
 
         int cont;
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         switch (id) {
             case "4bf58dd8d48988d12d941735":
@@ -424,31 +436,52 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
                 cont = tinydb.getInt(COINS_MUSEUM);
                 ++cont;
                 tinydb.putInt(COINS_MUSEUM, cont);
+
+                navigationView.getMenu().findItem(R.id.count_monuments).setTitle(Integer.toString(tinydb.getInt(COINS_MONUMENT)));
+
+
                 break;
             case "4bf58dd8d48988d1fe931735":
                 cont = tinydb.getInt(COINS_BUS);
                 ++cont;
                 tinydb.putInt(COINS_BUS, cont);
+
+                navigationView.getMenu().findItem(R.id.count_transports).setTitle(Integer.toString(tinydb.getInt(COINS_BUS)));
+
                 break;
             case "4bf58dd8d48988d1fd931735":
                 cont = tinydb.getInt(COINS_METRO);
                 ++cont;
                 tinydb.putInt(COINS_METRO, cont);
+
+                navigationView.getMenu().findItem(R.id.count_customs).setTitle(Integer.toString(tinydb.getInt(COINS_METRO)));
+
                 break;
             case "4d4b7105d754a06372d81259":
                 cont = tinydb.getInt(COINS_MONUMENT);
                 ++cont;
                 tinydb.putInt(COINS_UNI, cont);
+
+                navigationView.getMenu().findItem(R.id.count_monuments).setTitle(Integer.toString(tinydb.getInt(COINS_MONUMENT)));
+
                 break;
             default:
-                cont = tinydb.getInt(COINS_TOTAL);
+                cont = tinydb.getInt(COINS_METRO);
                 ++cont;
-                tinydb.putInt(COINS_TOTAL, cont);
+                tinydb.putInt(COINS_METRO, cont);
+
+                navigationView.getMenu().findItem(R.id.count_customs).setTitle(Integer.toString(tinydb.getInt(COINS_METRO)));
+
+                break;
+
         }
 
         cont = tinydb.getInt(COINS_TOTAL);
         ++cont;
         tinydb.putInt(COINS_TOTAL, cont);
+
+        navigationView.getMenu().findItem(R.id.count_all).setTitle(Integer.toString(tinydb.getInt(COINS_TOTAL)));
+
 
     }
 
