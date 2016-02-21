@@ -23,7 +23,7 @@ public class VenuesCriteria {
 	}
 
 	private String mQuery = "upc";
-	private int mRadius = 1000;
+	private int mRadius = 2500;
 	private int mQuantity = 50;
 	private Location mLocation = new Location(LocationManager.GPS_PROVIDER);
 	private VenuesCriteriaIntent intent = VenuesCriteriaIntent.CHECKIN;
