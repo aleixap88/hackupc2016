@@ -2,18 +2,18 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="dfecc4d835cdabcdecf7e95f0d20a3ef1e9d8ef4">
-        <dex dex="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-vision-8.4.0_add11b8cdcecbf38e201832b1d6db97e027066b0.jar" />
-    </item>
-    <item
         jar="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.4.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
         <dex dex="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appindexing-8.4.0_b03671132e481900baf6dff769c5ddb8a5122472.jar" />
+    </item>
+    <item
+        jar="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="dfecc4d835cdabcdecf7e95f0d20a3ef1e9d8ef4">
+        <dex dex="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-vision-8.4.0_add11b8cdcecbf38e201832b1d6db97e027066b0.jar" />
     </item>
     <item
         jar="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\8.4.0\jars\classes.jar"
@@ -26,7 +26,7 @@
         jar="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\exploded-aar\hackupc2016\foursquare\unspecified\jars\libs\foursquare-api-1.0.2.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="2b004e540f5cda61b2f3b9e0d19a025f1f629dee">
+        sha1="e2ac18c746a7d1f73afa499ef6cc805cd67301ab">
         <dex dex="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\pre-dexed\debug\foursquare-api-1.0.2_b644834b79b1d5c7c6e297b98dd9f6f6739e9d12.jar" />
     </item>
     <item
@@ -264,7 +264,7 @@
         jar="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\exploded-aar\hackupc2016\foursquare\unspecified\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="247b472b13babbf43d5b5175ed20504095696fef">
+        sha1="16f9f3c8958ca21c008bc1cae86eb5dd68237a6b">
         <dex dex="C:\Users\howar\Documents\GitHub\hackupc2016\app\build\intermediates\pre-dexed\debug\hackupc2016-foursquare-unspecified_51f09ade8f361dac6e85d6fec8151aece9247d74.jar" />
     </item>
 

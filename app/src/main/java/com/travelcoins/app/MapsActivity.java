@@ -1,22 +1,34 @@
 package com.travelcoins.app;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
+import android.location.LocationListener;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.condesales.EasyFoursquareAsync;
 import br.com.condesales.GPSTracker;
@@ -24,18 +36,36 @@ import br.com.condesales.criterias.VenuesCriteria;
 import br.com.condesales.listeners.FoursquareVenuesRequestListener;
 import br.com.condesales.models.Venue;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import com.travelcoins.app.TinyDB;
+
+public class MapsActivity extends FragmentActivity implements LocationListener, OnMapReadyCallback  {
+
+    public static final String COINS_TOTAL = "coins_total";
+    public static final String COINS_MUSEUM = "coin_museum";
+    public static final String COINS_UNI = "coins_uni";
+    public static final String COINS_METRO = "coins_metro";
+    public static final String COINS_BUS =  "coins_bus";
+    public static final String COINS_MONUMENT = "coins_monument";
 
     private Context mActivity;
     private GoogleMap mMap;
     private EasyFoursquareAsync async;
     private ArrayList<Venue> VenuesList;
+    private ArrayList<Marker> Markers;
     private VenuesCriteria criteria;
     private Context context;
     private Location mLocation;
 
     private LatLng mLatLng;
     private Venue v;
+
+    private LocationManager locationManager;
+    private LocationListener mLocationListener;
+
+    private TinyDB tinydb;
+
+    private ArrayList<String> saved;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +78,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mActivity = getApplicationContext();
 
+        //saved = tinydb.getListString("saved_coins");
+
+        tinydb = new TinyDB(getApplicationContext());
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                                                2000,
+                                                10, (android.location.LocationListener)this);
+
         GPSTracker gps = new GPSTracker(mActivity);
         if(gps.canGetLocation()){
             mLocation = gps.getLocation();
             mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
         }
-    }
 
+        //mLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
+        //mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+
+    }
 
     /**
      * Manipulates the map once available.
@@ -76,21 +119,70 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.5f));
         mMap.setMyLocationEnabled(true);
 
-
         async.getVenuesNearby(new FoursquareVenuesRequestListener() {
             @Override
             public void onVenuesFetched(ArrayList<Venue> venues) {
-                Venue v = venues.get(1);
-                String s = v.getId();
-                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+
+                VenuesList = venues;
+                Markers = new ArrayList<Marker>(venues.size());
+                ArrayList<String> saved = tinydb.getListString("saved_coins");
+
                 for (int i = 0; i < venues.size(); ++i) {
+
                     v = venues.get(i);
+                    LatLng latlong = new LatLng(v.getLocation().getLat(), v.getLocation().getLng());
 
-                    mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(v.getLocation().getLat(), v.getLocation().getLng()))
-                            .title(v.getName()+" "+v.getCategories().get(0).getName())
-                            .icon(BitmapDescriptorFactory.fromBitmap(resize_MapIcon(v.getCategories().get(0).getId()))));
+                    if (!isInside(mLocation, latlong)) {
 
+                        if (saved.contains(v.getId())) {
+
+                        } else {
+                            Markers.add(mMap.addMarker(new MarkerOptions()
+                                    .position(latlong)
+                                    .title(v.getName() + " " + v.getCategories().get(0).getName())
+                                    .icon(BitmapDescriptorFactory.fromBitmap(resize_MapIcon(v.getCategories().get(0).getId())))));
+
+                        }
+                    }
+                    else {
+                        //COMPROBAR SI YA ESTABA COGIDA O NO O SI ES DE UN RETO, SI NO LO ESTABA LANZAR ACTIVITY
+                        Log.v("WOLOLO", "YOU ARE INSIDE");
+                        if (saved != null) {
+                            for (int j = 0; j < saved.size(); ++j) {
+                                if (saved.get(j).equals(v.getId())) {
+                                    //Esta esta alli no hacer NAHHH!!
+                                    Log.v("WOLOLO", "NOTHING HAPPEN");
+                                } else {
+                                    //No esta, guardar i lanzar activity
+                                    saved = tinydb.getListString("save_cons");
+                                    saved.add(v.getId());
+                                    tinydb.putListString("saved_coins", saved);
+
+                                    Intent intent = new Intent(context, CoinActivity.class);
+                                    intent.putExtra("name", v.getName());
+                                    intent.putExtra("img", v.getCategories().get(0).getName());
+                                    startActivity(intent);
+
+                                    plusone(v.getCategories().get(0).getId());
+
+                                    Log.v("WOLOLO", "YOU DONT HAVE IT");
+                                }
+                            }
+                        }
+                        else {
+
+                            saved = tinydb.getListString("save_cons");
+                            saved.add(v.getId());
+                            tinydb.putListString("saved_coins", saved);
+
+                            Intent intent = new Intent(context, CoinActivity.class);
+                            intent.putExtra("name", v.getName());
+                            intent.putExtra("img", v.getCategories().get(0).getName());
+                            startActivity(intent);
+
+                        }
+
+                    }
                 }
             }
 
@@ -98,13 +190,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onError(String errorMsg) {
 
             }
-        },criteria);
+        }, criteria);
 
 
-        // Add a marker in Sydney and move the camera
-        /*LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
     }
 
 
@@ -134,4 +222,132 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 70, 70, false);
         return resizedBitmap;
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        String msg = "New Latitude: " + location.getLatitude()
+                + "New Longitude: " + location.getLongitude();
+
+        mLocation = location;
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+        ArrayList<String> saved = tinydb.getListString("saved_coins");
+
+        if (VenuesList != null) {
+
+            for (int i = 0; i < VenuesList.size(); ++i) {
+                Venue v = VenuesList.get(i);
+                mLatLng = new LatLng(v.getLocation().getLat(), v.getLocation().getLng());
+                if(isInside(location, mLatLng)) {
+                    //LANZAR ACTIVITY DE GANAR MONEDA, COMPROBAR SI ERA DE RETO O NO Y TRATARLA
+
+                    for (int k = 0; k < Markers.size(); ++k) {
+                        if (Markers.get(k).getPosition().latitude == mLatLng.latitude) {
+                            if (Markers.get(k).getPosition().longitude == mLatLng.longitude) {
+                                Markers.get(k).remove();
+                                saved.add(v.getId());
+                                tinydb.putListString("saved_coins", saved);
+
+                                Intent intent = new Intent(this, CoinActivity.class);
+                                intent.putExtra("name", v.getName());
+                                intent.putExtra("img", v.getCategories().get(0).getName());
+                                startActivity(intent);
+
+                                plusone(v.getCategories().get(0).getId());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+        Toast.makeText(getBaseContext(), "Gps is turned off!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+        Toast.makeText(getBaseContext(), "Gps is turned on!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public boolean isInside(Location location, LatLng latlng) {
+
+        float[] distance = new float[2];
+
+        Circle circle = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(location.getLatitude(), location.getLongitude()))
+                .radius(20)
+                .strokeColor(android.graphics.Color.TRANSPARENT));
+
+        Location.distanceBetween(latlng.latitude, latlng.longitude,
+                circle.getCenter().latitude, circle.getCenter().longitude, distance);
+
+        if (distance[0] > circle.getRadius()) {
+            //circle.remove();
+            return false;
+        } else {
+            //circle.remove();
+            return true;
+        }
+
+    }
+
+    public void plusone(String id) {
+
+        int cont;
+
+        switch (id) {
+            case "4bf58dd8d48988d12d941735":
+                cont = tinydb.getInt(COINS_MONUMENT);
+                ++cont;
+                tinydb.putInt(COINS_MONUMENT, cont);
+                break;
+            case "4bf58dd8d48988d181941735":
+                cont = tinydb.getInt(COINS_MUSEUM);
+                ++cont;
+                tinydb.putInt(COINS_MUSEUM, cont);
+                break;
+            case "4bf58dd8d48988d1fe931735":
+                cont = tinydb.getInt(COINS_BUS);
+                ++cont;
+                tinydb.putInt(COINS_BUS, cont);
+                break;
+            case "4bf58dd8d48988d1fd931735":
+                cont = tinydb.getInt(COINS_METRO);
+                ++cont;
+                tinydb.putInt(COINS_METRO, cont);
+                break;
+            case "4d4b7105d754a06372d81259":
+                cont = tinydb.getInt(COINS_MONUMENT);
+                ++cont;
+                tinydb.putInt(COINS_UNI, cont);
+                break;
+            default:
+                cont = tinydb.getInt(COINS_TOTAL);
+                ++cont;
+                tinydb.putInt(COINS_TOTAL, cont);
+        }
+
+        cont = tinydb.getInt(COINS_TOTAL);
+        ++cont;
+        tinydb.putInt(COINS_TOTAL, cont);
+
+    }
+
+
 }

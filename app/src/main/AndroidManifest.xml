@@ -49,10 +49,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.travelcoins.app.MainActivity" />
         </activity>
+
         <activity
             android:name=".NavDrawMap"
             android:label="@string/title_activity_nav_draw_map"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity android:name=".CoinActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.travelcoins.app.MapsActivity" />
+        </activity>
+
     </application>
 
 </manifest>
