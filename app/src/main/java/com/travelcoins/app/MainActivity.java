@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (AccessToken.getCurrentAccessToken() != null) {
-            Intent i = new Intent(this, MapsActivity.class);
+            Intent i = new Intent(this, NavDrawMap.class);
             startActivity(i);
         }
     }
