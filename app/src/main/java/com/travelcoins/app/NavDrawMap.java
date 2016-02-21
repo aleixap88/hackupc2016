@@ -76,14 +76,10 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
     private ArrayList<String> saved;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_draw_map);
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -218,7 +214,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
         async = new EasyFoursquareAsync(this);
 
         //Map configuration
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.5f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 17.5f));
         mMap.setMyLocationEnabled(true);
 
         async.getVenuesNearby(new FoursquareVenuesRequestListener() {
@@ -227,6 +223,8 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
                 VenuesList = venues;
                 Markers = new ArrayList<Marker>(venues.size());
+
+
                 ArrayList<String> saved = tinydb.getListString("saved_coins");
 
                 for (int i = 0; i < venues.size(); ++i) {
@@ -243,6 +241,8 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
                                     .position(latlong)
                                     .title(v.getName() + " " + v.getCategories().get(0).getName())
                                     .icon(BitmapDescriptorFactory.fromBitmap(resize_MapIcon(v.getCategories().get(0).getId())))));
+
+
 
                         }
                     }
@@ -288,6 +288,12 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
                     }
                 }
+                // Mockup
+/*                LatLng latlong = new LatLng(41.389096, 2.113392);
+                Markers.add(mMap.addMarker(new MarkerOptions()
+                        .position(latlong)
+                        .title(v.getName() + " " + v.getCategories().get(0).getName())
+                        .icon(BitmapDescriptorFactory.fromBitmap(resize_MapIcon(v.getCategories().get(0).getId())))));*/
             }
 
             @Override
@@ -405,7 +411,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
 
         Circle circle = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(location.getLatitude(), location.getLongitude()))
-                .radius(25)
+                .radius(35)
                 .strokeColor(android.graphics.Color.TRANSPARENT));
 
         Location.distanceBetween(latlng.latitude, latlng.longitude,
@@ -437,7 +443,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
                 ++cont;
                 tinydb.putInt(COINS_MUSEUM, cont);
 
-                navigationView.getMenu().findItem(R.id.count_monuments).setTitle(Integer.toString(tinydb.getInt(COINS_MONUMENT)));
+                navigationView.getMenu().findItem(R.id.count_museums).setTitle(Integer.toString(tinydb.getInt(COINS_MUSEUM)));
 
 
                 break;
@@ -460,7 +466,7 @@ public class NavDrawMap extends AppCompatActivity implements NavigationView.OnNa
             case "4d4b7105d754a06372d81259":
                 cont = tinydb.getInt(COINS_MONUMENT);
                 ++cont;
-                tinydb.putInt(COINS_UNI, cont);
+                tinydb.putInt(COINS_MONUMENT, cont);
 
                 navigationView.getMenu().findItem(R.id.count_monuments).setTitle(Integer.toString(tinydb.getInt(COINS_MONUMENT)));
 

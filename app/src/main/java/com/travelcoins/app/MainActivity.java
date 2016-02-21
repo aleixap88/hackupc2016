@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-        BdHandler bdHandler = new BdHandler();
-        bdHandler.execute();
+        // Conexión base de datos para retar a gente
+        //BdHandler bdHandler = new BdHandler();
+        //bdHandler.execute();
 
         // -------------------------------------------
 
@@ -83,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!usuario_registrado()) {
                     Log.d("REGISTRO: ", "user registrado!!");
-                    Post_handler post_handler = new Post_handler();
-                    post_handler.execute();
+                    //Post_handler post_handler = new Post_handler();
+                    //post_handler.execute();
                 }
 
-                Intent i = new Intent(getApplicationContext(), MapsActivity.class);
+                Intent i = new Intent(getApplicationContext(), NavDrawMap.class);
                 startActivity(i);
 
                 //info.setText("User ID:  " +
